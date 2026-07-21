@@ -10,11 +10,15 @@ public class Main {
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(() -> {
-            Agenda agenda = new Agenda();
-            VentanaPrincipal ventana = new VentanaPrincipal();
-            AgendaControlador controlador = new AgendaControlador(agenda, ventana);
-            controlador.iniciar();
-            ventana.setVisible(true);
+            try {
+                Agenda agenda = new Agenda();
+                VentanaPrincipal ventana = new VentanaPrincipal();
+                AgendaControlador controlador = new AgendaControlador(agenda, ventana);
+                controlador.iniciar();
+                ventana.setVisible(true);
+            }catch (Exception e){
+                System.out.println("Se presento un error :"+e.getMessage());
+            }
         });
     }
 }
