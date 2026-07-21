@@ -1,7 +1,6 @@
 package com.hackathon.agenda.vista;
 
 import com.hackathon.agenda.controlador.AgendaControlador;
-import com.hackathon.agenda.modelo.Contacto;
 
 import java.util.Scanner;
 
@@ -20,15 +19,13 @@ public class VentanaPrincipal {
 
         int capacidad = solicitarCapacidad();
 
-        agendaControlador =
-                new AgendaControlador(capacidad);
+        agendaControlador = new AgendaControlador(capacidad);
 
         int opcion;
 
         do {
             mostrarMenu();
             opcion = leerEntero();
-
             ejecutarOpcion(opcion);
 
         } while (opcion != 0);
@@ -76,7 +73,11 @@ public class VentanaPrincipal {
                 break;
 
             case 6:
-                agendaControlador.mostrarEstadoAgenda();
+                if (agendaControlador.agendaLlena()) {
+                    System.out.println("La agenda está llena.");
+                } else {
+                    System.out.println("La agenda tiene espacio disponible.");
+                }
                 break;
 
             case 7:
@@ -103,10 +104,11 @@ public class VentanaPrincipal {
         System.out.print("Teléfono: ");
         String telefono = scanner.nextLine();
 
-        Contacto contacto =
-                new Contacto(nombre, apellido, telefono);
-
-        agendaControlador.anadirContacto(contacto);
+        agendaControlador.anadirContacto(
+                nombre,
+                apellido,
+                telefono
+        );
     }
 
     private void buscarContacto() {
@@ -131,10 +133,10 @@ public class VentanaPrincipal {
         System.out.print("Apellido: ");
         String apellido = scanner.nextLine();
 
-        Contacto contacto =
-                new Contacto(nombre, apellido, "");
-
-        agendaControlador.eliminarContacto(contacto);
+        agendaControlador.eliminarContacto(
+                nombre,
+                apellido
+        );
     }
 
     private void modificarTelefono() {
@@ -187,9 +189,7 @@ public class VentanaPrincipal {
                 return Integer.parseInt(entrada);
 
             } catch (NumberFormatException error) {
-                System.out.print(
-                        "Ingrese un número válido: "
-                );
+                System.out.print("Ingrese un número válido: ");
             }
         }
     }
