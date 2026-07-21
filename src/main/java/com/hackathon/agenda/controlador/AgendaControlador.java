@@ -8,6 +8,7 @@ public class AgendaControlador {
 
     private final Agenda agenda;
     private final VentanaPrincipal vista;
+    private Contacto contactoSeleccionado;
 
     public AgendaControlador(Agenda agenda, VentanaPrincipal vista) {
         this.agenda = agenda;
@@ -19,6 +20,20 @@ public class AgendaControlador {
         vista.getBtnModificar().addActionListener(e -> accionModificar());
         vista.getBtnEliminar().addActionListener(e -> accionEliminar());
         vista.getBtnLimpiar().addActionListener(e -> vista.limpiarCampos());
+        contactoSeleccionado = new Contacto();
+        vista.getTablaContactos().getSelectionModel().addListSelectionListener(e->{
+            if (!e.getValueIsAdjusting()) {
+                int filaSeleccionada = vista.getTablaContactos().getSelectedRow();
+                if (filaSeleccionada != -1) {
+                    // Obtiene los datos de la fila seleccionada
+                    contactoSeleccionado.setNombre(vista.getTablaContactos().getValueAt(filaSeleccionada, 0).toString());
+                    contactoSeleccionado.setApellido(vista.getTablaContactos().getValueAt(filaSeleccionada, 1).toString());
+                    contactoSeleccionado.setTelefono(vista.getTablaContactos().getValueAt(filaSeleccionada, 2).toString());
+                }
+
+
+            }
+        });
     }
 
 
@@ -54,7 +69,11 @@ public class AgendaControlador {
         // Eliminar en el modelo
         Contacto contactoAEliminar = new Contacto(nombre, apellido, "");
         boolean eliminado = agenda.eliminarContacto(contactoAEliminar);
-
+        //Eliminarlo de la vista
+        int filaSeleccionada = vista.getTablaContactos().getSelectedRow();
+        if (filaSeleccionada != -1) {
+            vista.getModeloTabla().removeRow(filaSeleccionada);
+        }
         // Actualizar la interfaz
         if (eliminado) {
             vista.mostrarMensaje("Contacto " + nombre + " " + apellido + " eliminado correctamente.");
