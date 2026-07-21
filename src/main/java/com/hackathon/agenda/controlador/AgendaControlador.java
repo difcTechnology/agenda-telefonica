@@ -14,19 +14,28 @@ public class AgendaControlador {
         this.vista = vista;
     }
 
-    // Registra los eventos de los botones
-    public void iniciar() {
+        public void iniciar() {
         vista.getBtnAnadir().addActionListener(e -> accionAnadir());
         vista.getBtnModificar().addActionListener(e -> accionModificar());
         vista.getBtnEliminar().addActionListener(e -> accionEliminar());
     }
 
-    private void accionAnadir() {
-        System.out.println("Se hizo clic en Añadir");
-    }
 
-    private void accionModificar() {
-        System.out.println("Se hizo clic en Modificar");
+    private void accionAnadir() {
+        String nombre = vista.getTxtNombre().getText().trim();
+        String apellido = vista.getTxtApellido().getText().trim();
+        String telefono = vista.getTxtTelefono().getText().trim();
+
+        Contacto contacto = new Contacto(nombre, apellido, telefono);
+        String error = agenda.añadirContacto(contacto);
+
+        if (error == null) {
+            String[] nuevoRegistro = new String[]{nombre, apellido, telefono};
+            vista.getModeloTabla().addRow(nuevoRegistro);
+            vista.mostrarMensaje("Contacto agregado: " + nombre + " " + apellido);
+        } else {
+            vista.mostrarMensaje(error);
+        }
     }
 
     // Elimina el contacto seleccionado o ingresado
