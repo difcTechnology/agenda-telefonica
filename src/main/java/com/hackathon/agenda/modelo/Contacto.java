@@ -3,15 +3,17 @@ package com.hackathon.agenda.modelo;
 import java.util.Objects;
 
 public class Contacto {
-
     private String nombre;
     private String apellido;
     private String telefono;
 
+    public Contacto() {
+    }
+
     public Contacto(String nombre, String apellido, String telefono) {
-        this.nombre = nombre.trim();
-        this.apellido = apellido.trim();
-        this.telefono = telefono.trim();
+        this.nombre = nombre != null ? nombre.trim() : "";
+        this.apellido = apellido != null ? apellido.trim() : "";
+        this.telefono = telefono != null ? telefono.trim() : "";
     }
 
     public String getNombre() {
@@ -19,7 +21,7 @@ public class Contacto {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre.trim();
+        this.nombre = nombre != null ? nombre.trim() : "";
     }
 
     public String getApellido() {
@@ -27,7 +29,7 @@ public class Contacto {
     }
 
     public void setApellido(String apellido) {
-        this.apellido = apellido.trim();
+        this.apellido = apellido != null ? apellido.trim() : "";
     }
 
     public String getTelefono() {
@@ -35,36 +37,25 @@ public class Contacto {
     }
 
     public void setTelefono(String telefono) {
-        this.telefono = telefono.trim();
+        this.telefono = telefono != null ? telefono.trim() : "";
     }
 
     @Override
-    public String toString() {
-        return nombre + " " + apellido + " - " + telefono;
-    }
-
-    @Override
-    public boolean equals(Object objeto) {
-
-        if (this == objeto) {
-            return true;
-        }
-
-        if (!(objeto instanceof Contacto)) {
-            return false;
-        }
-
-        Contacto otro = (Contacto) objeto;
-
-        return nombre.equalsIgnoreCase(otro.nombre)
-                && apellido.equalsIgnoreCase(otro.apellido);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Contacto contacto = (Contacto) o;
+        return Objects.equals(nombre.toLowerCase(), contacto.nombre.toLowerCase()) &&
+               Objects.equals(apellido.toLowerCase(), contacto.apellido.toLowerCase());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-                nombre.toLowerCase(),
-                apellido.toLowerCase()
-        );
+        return Objects.hash(nombre.toLowerCase(), apellido.toLowerCase());
+    }
+
+    @Override
+    public String toString() {
+        return nombre + " " + apellido + " (" + telefono + ")";
     }
 }

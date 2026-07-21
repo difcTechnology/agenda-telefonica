@@ -1,196 +1,144 @@
 package com.hackathon.agenda.vista;
 
-import com.hackathon.agenda.controlador.AgendaControlador;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
-import java.util.Scanner;
+public class VentanaPrincipal extends JFrame {
 
-public class VentanaPrincipal {
+    // Campos
+    private JTextField txtNombre;
+    private JTextField txtApellido;
+    private JTextField txtTelefono;
 
-    private final Scanner scanner;
-    private AgendaControlador agendaControlador;
+    // Botones
+    private JButton btnAnadir;
+    private JButton btnModificar;
+    private JButton btnBuscar;
+    private JButton btnEliminar;
+    private JButton btnLimpiar;
+
+    // Tabla
+    private JTable tablaContactos;
+    private DefaultTableModel modeloTabla;
+
+    // Estado
+    private JLabel lblEstado;
 
     public VentanaPrincipal() {
-        scanner = new Scanner(System.in);
+        inicializar();
     }
 
-    public void iniciar() {
+    private void inicializar() {
 
-        System.out.println("===== AGENDA DE CONTACTOS =====");
+        setTitle("Agenda Telefónica");
+        setSize(700, 500);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new BorderLayout(10,10));
 
-        int capacidad = solicitarCapacidad();
+        //formulario
 
-        agendaControlador = new AgendaControlador(capacidad);
+        JPanel panelFormulario = new JPanel(new GridLayout(4,2,5,5));
 
-        int opcion;
+        panelFormulario.add(new JLabel("Nombre"));
+        txtNombre = new JTextField();
+        panelFormulario.add(txtNombre);
 
-        do {
-            mostrarMenu();
-            opcion = leerEntero();
-            ejecutarOpcion(opcion);
+        panelFormulario.add(new JLabel("Apellido"));
+        txtApellido = new JTextField();
+        panelFormulario.add(txtApellido);
 
-        } while (opcion != 0);
+        panelFormulario.add(new JLabel("Teléfono"));
+        txtTelefono = new JTextField();
+        panelFormulario.add(txtTelefono);
 
-        scanner.close();
+        JPanel panelBotones = new JPanel(new FlowLayout());
+
+        btnAnadir = new JButton("Añadir");
+        btnModificar = new JButton("Modificar");
+        btnBuscar = new JButton("Buscar");
+        btnEliminar = new JButton("Eliminar");
+        btnLimpiar = new JButton("Limpiar");
+
+        panelBotones.add(btnAnadir);
+        panelBotones.add(btnModificar);
+        panelBotones.add(btnBuscar);
+        panelBotones.add(btnEliminar);
+        panelBotones.add(btnLimpiar);
+
+        JPanel panelSuperior = new JPanel(new BorderLayout());
+
+        panelSuperior.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        panelSuperior.add(panelFormulario, BorderLayout.CENTER);
+        panelSuperior.add(panelBotones, BorderLayout.SOUTH);
+
+        add(panelSuperior, BorderLayout.NORTH);
+
+        //tabla
+
+        modeloTabla = new DefaultTableModel(
+                new Object[]{"Nombre","Apellido","Teléfono"},0);
+
+        tablaContactos = new JTable(modeloTabla);
+
+        JScrollPane scroll = new JScrollPane(tablaContactos);
+
+        add(scroll, BorderLayout.CENTER);
+
+        //estado
+
+        lblEstado = new JLabel("Listo");
+        lblEstado.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+
+        add(lblEstado, BorderLayout.SOUTH);
     }
 
-    private void mostrarMenu() {
+    //getter
 
-        System.out.println();
-        System.out.println("===== MENÚ PRINCIPAL =====");
-        System.out.println("1. Añadir contacto");
-        System.out.println("2. Listar contactos");
-        System.out.println("3. Buscar contacto");
-        System.out.println("4. Eliminar contacto");
-        System.out.println("5. Modificar teléfono");
-        System.out.println("6. Verificar si la agenda está llena");
-        System.out.println("7. Mostrar espacios libres");
-        System.out.println("0. Salir");
-        System.out.print("Seleccione una opción: ");
+    public JTextField getTxtNombre() {
+        return txtNombre;
     }
 
-    private void ejecutarOpcion(int opcion) {
-
-        switch (opcion) {
-
-            case 1:
-                anadirContacto();
-                break;
-
-            case 2:
-                agendaControlador.listarContactos();
-                break;
-
-            case 3:
-                buscarContacto();
-                break;
-
-            case 4:
-                eliminarContacto();
-                break;
-
-            case 5:
-                modificarTelefono();
-                break;
-
-            case 6:
-                if (agendaControlador.agendaLlena()) {
-                    System.out.println("La agenda está llena.");
-                } else {
-                    System.out.println("La agenda tiene espacio disponible.");
-                }
-                break;
-
-            case 7:
-                agendaControlador.espaciosLibres();
-                break;
-
-            case 0:
-                System.out.println("Programa finalizado.");
-                break;
-
-            default:
-                System.out.println("Opción inválida.");
-        }
+    public JTextField getTxtApellido() {
+        return txtApellido;
     }
 
-    private void anadirContacto() {
-
-        System.out.print("Nombre: ");
-        String nombre = scanner.nextLine();
-
-        System.out.print("Apellido: ");
-        String apellido = scanner.nextLine();
-
-        System.out.print("Teléfono: ");
-        String telefono = scanner.nextLine();
-
-        agendaControlador.anadirContacto(
-                nombre,
-                apellido,
-                telefono
-        );
+    public JTextField getTxtTelefono() {
+        return txtTelefono;
     }
 
-    private void buscarContacto() {
-
-        System.out.print("Nombre: ");
-        String nombre = scanner.nextLine();
-
-        System.out.print("Apellido: ");
-        String apellido = scanner.nextLine();
-
-        agendaControlador.buscarContacto(
-                nombre,
-                apellido
-        );
+    public JButton getBtnAnadir() {
+        return btnAnadir;
     }
 
-    private void eliminarContacto() {
-
-        System.out.print("Nombre: ");
-        String nombre = scanner.nextLine();
-
-        System.out.print("Apellido: ");
-        String apellido = scanner.nextLine();
-
-        agendaControlador.eliminarContacto(
-                nombre,
-                apellido
-        );
+    public JButton getBtnModificar() {
+        return btnModificar;
     }
 
-    private void modificarTelefono() {
-
-        System.out.print("Nombre: ");
-        String nombre = scanner.nextLine();
-
-        System.out.print("Apellido: ");
-        String apellido = scanner.nextLine();
-
-        System.out.print("Nuevo teléfono: ");
-        String nuevoTelefono = scanner.nextLine();
-
-        agendaControlador.modificarTelefono(
-                nombre,
-                apellido,
-                nuevoTelefono
-        );
+    public JButton getBtnBuscar() {
+        return btnBuscar;
     }
 
-    private int solicitarCapacidad() {
-
-        int capacidad;
-
-        do {
-            System.out.print(
-                    "Ingrese la capacidad máxima de la agenda: "
-            );
-
-            capacidad = leerEntero();
-
-            if (capacidad <= 0) {
-                System.out.println(
-                        "La capacidad debe ser mayor que cero."
-                );
-            }
-
-        } while (capacidad <= 0);
-
-        return capacidad;
+    public JButton getBtnEliminar() {
+        return btnEliminar;
     }
 
-    private int leerEntero() {
-
-        while (true) {
-
-            String entrada = scanner.nextLine();
-
-            try {
-                return Integer.parseInt(entrada);
-
-            } catch (NumberFormatException error) {
-                System.out.print("Ingrese un número válido: ");
-            }
-        }
+    public JButton getBtnLimpiar() {
+        return btnLimpiar;
     }
+
+    public JTable getTablaContactos() {
+        return tablaContactos;
+    }
+
+    public DefaultTableModel getModeloTabla() {
+        return modeloTabla;
+    }
+
+    public void mostrarMensaje(String mensaje) {
+        lblEstado.setText(mensaje);
+    }
+
+
 }
