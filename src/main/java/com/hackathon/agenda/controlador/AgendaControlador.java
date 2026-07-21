@@ -1,6 +1,7 @@
 package com.hackathon.agenda.controlador;
 
 import com.hackathon.agenda.modelo.Agenda;
+import com.hackathon.agenda.modelo.Contacto;
 import com.hackathon.agenda.vista.VentanaPrincipal;
 
 public class AgendaControlador {
@@ -19,7 +20,18 @@ public class AgendaControlador {
     }
 
     private void accionAnadir() {
-        System.out.println("Se hizo clic en Añadir");
+        String nombre = vista.getTxtNombre().getText().trim();
+        String apellido = vista.getTxtApellido().getText().trim();
+        String telefono = vista.getTxtTelefono().getText().trim();
+
+        Contacto contacto = new Contacto(nombre, apellido, telefono);
+        String error = agenda.añadirContacto(contacto);
+
+        if (error == null) {
+            vista.mostrarMensaje("Contacto agregado: " + nombre + " " + apellido);
+        } else {
+            vista.mostrarMensaje(error);
+        }
     }
 
     private void accionModificar() {
