@@ -4,10 +4,13 @@ import com.hackathon.agenda.modelo.Agenda;
 import com.hackathon.agenda.modelo.Contacto;
 import com.hackathon.agenda.vista.VentanaPrincipal;
 
+import java.awt.*;
+import java.util.List;
+
 public class AgendaControlador {
 
     private final Agenda agenda;
-    private final VentanaPrincipal vista;
+    private final VentanaPrincipal  vista;
     private Contacto contactoSeleccionado;
 
     public AgendaControlador(Agenda agenda, VentanaPrincipal vista) {
@@ -20,6 +23,7 @@ public class AgendaControlador {
         vista.getBtnModificar().addActionListener(e -> accionModificar());
         vista.getBtnEliminar().addActionListener(e -> accionEliminar());
         vista.getBtnLimpiar().addActionListener(e -> vista.limpiarCampos());
+        vista.getBtnListar().addActionListener(e -> listarContactos());
         contactoSeleccionado = new Contacto();
         vista.getTablaContactos().getSelectionModel().addListSelectionListener(e->{
             if (!e.getValueIsAdjusting()) {
@@ -48,9 +52,9 @@ public class AgendaControlador {
         if (error == null) {
             String[] nuevoRegistro = new String[]{nombre, apellido, telefono};
             vista.getModeloTabla().addRow(nuevoRegistro);
-            vista.mostrarMensaje("Contacto agregado: " + nombre + " " + apellido);
+            vista.mostrarMensaje("Contacto agregado: " + nombre + " " + apellido, Color.GREEN);
         } else {
-            vista.mostrarMensaje(error);
+            vista.mostrarMensaje(error,Color.RED);
         }
     }
 
@@ -62,13 +66,13 @@ public class AgendaControlador {
 
         // Validar campos vacíos
         if (nombre.isEmpty() || apellido.isEmpty()) {
-            vista.mostrarMensaje("Debe seleccionar un contacto o ingresar nombre y apellido para eliminar.");
+            vista.mostrarMensaje("Debe seleccionar un contacto o ingresar nombre y apellido para eliminar.",Color.YELLOW);
             return;
         }
 
         // Eliminar en el modelo
         Contacto contactoAEliminar = new Contacto(nombre, apellido, "");
-        boolean eliminado = agenda.eliminarContacto(contactoAEliminar);
+        boolean eliminado = agenda.eliminarContacto(contactoSeleccionado);
         //Eliminarlo de la vista
         int filaSeleccionada = vista.getTablaContactos().getSelectedRow();
         if (filaSeleccionada != -1) {
@@ -76,15 +80,25 @@ public class AgendaControlador {
         }
         // Actualizar la interfaz
         if (eliminado) {
-            vista.mostrarMensaje("Contacto " + nombre + " " + apellido + " eliminado correctamente.");
+            vista.mostrarMensaje("Contacto " + nombre + " " + apellido + " eliminado correctamente.",Color.GREEN);
             vista.limpiarCampos();
             //vista.actualizarTabla(agenda.listarContactos());
         } else {
-            vista.mostrarMensaje("El contacto no existe en la agenda.");
+            vista.mostrarMensaje("El contacto no existe en la agenda.",Color.YELLOW);
         }
     }
 
     private void accionModificar() {
+    }
+
+    public void listarContactos(){
+        vista.getModeloTabla().setRowCount(0);
+        List<Contacto> contactos = agenda.listarContactos();
+
+        for(Contacto contacto : contactos){
+            String[] nuevoRegistro = new String[]{contacto.getNombre(), contacto.getApellido(), contacto.getTelefono()};
+            vista.getModeloTabla().addRow(nuevoRegistro);
+        }
     }
 
 }

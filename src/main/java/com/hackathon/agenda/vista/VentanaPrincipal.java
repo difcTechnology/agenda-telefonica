@@ -17,6 +17,7 @@ public class VentanaPrincipal extends JFrame {
     private JButton btnBuscar;
     private JButton btnEliminar;
     private JButton btnLimpiar;
+    private JButton btnListar;
 
     // Tabla
     private JTable tablaContactos;
@@ -60,12 +61,14 @@ public class VentanaPrincipal extends JFrame {
         btnBuscar = new JButton("Buscar");
         btnEliminar = new JButton("Eliminar");
         btnLimpiar = new JButton("Limpiar");
+        btnListar = new JButton("Listar");
 
         panelBotones.add(btnAnadir);
         panelBotones.add(btnModificar);
         panelBotones.add(btnBuscar);
         panelBotones.add(btnEliminar);
         panelBotones.add(btnLimpiar);
+        panelBotones.add(btnListar);
 
         JPanel panelSuperior = new JPanel(new BorderLayout());
 
@@ -136,14 +139,19 @@ public class VentanaPrincipal extends JFrame {
         return modeloTabla;
     }
 
-    public void mostrarMensaje(String mensaje) {
+    public void mostrarMensaje(String mensaje, Color color) {
         lblEstado.setText(mensaje);
+        lblEstado.setForeground(color);
     }
 
+    public JButton getBtnListar() {
+        return btnListar;
+    }
 
     public void limpiarCampos() {
         txtNombre.setText("");
         txtApellido.setText("");
         txtTelefono.setText("");
+        lblEstado.setText("");
     }
 }
