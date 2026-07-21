@@ -2,56 +2,56 @@ package com.hackathon.agenda.controlador;
 
 import com.hackathon.agenda.modelo.Agenda;
 import com.hackathon.agenda.modelo.Contacto;
+import com.hackathon.agenda.vista.VentanaPrincipal;
 
 public class AgendaControlador {
 
-    private Agenda agenda;
+    private final Agenda agenda;
+    private final VentanaPrincipal vista;
 
-    public AgendaControlador(int capacidadMaxima) {
-        agenda = new Agenda(capacidadMaxima);
+    public AgendaControlador(Agenda agenda, VentanaPrincipal vista) {
+        this.agenda = agenda;
+        this.vista = vista;
     }
 
-    public void anadirContacto(String nombre,
-                               String apellido,
-                               String telefono) {
-
-        Contacto contacto = new Contacto(nombre, apellido, telefono);
-        // agenda.anadirContacto(contacto);
+    // Registra los eventos de los botones
+    public void iniciar() {
+        vista.getBtnAnadir().addActionListener(e -> accionAnadir());
+        vista.getBtnModificar().addActionListener(e -> accionModificar());
+        vista.getBtnEliminar().addActionListener(e -> accionEliminar());
     }
 
-    public void listarContactos() {
-        agenda.listarContactos();
+    private void accionAnadir() {
+        System.out.println("Se hizo clic en Añadir");
     }
 
-    public void buscarContacto(String nombre,
-                               String apellido) {
-
-        agenda.buscarContacto(nombre, apellido);
+    private void accionModificar() {
+        System.out.println("Se hizo clic en Modificar");
     }
 
-    public void eliminarContacto(String nombre,
-                                 String apellido) {
+    // Elimina el contacto seleccionado o ingresado
+    private void accionEliminar() {
+        // Obtener texto de la vista
+        String nombre = vista.getTxtNombre().getText().trim();
+        String apellido = vista.getTxtApellido().getText().trim();
 
-        Contacto contacto = new Contacto(nombre, apellido, "");
-        agenda.eliminarContacto(contacto);
-    }
+        // Validar campos vacíos
+        if (nombre.isEmpty() || apellido.isEmpty()) {
+            vista.mostrarMensajeError("Debe seleccionar un contacto o ingresar nombre y apellido para eliminar.");
+            return;
+        }
 
-    public void modificarTelefono(String nombre,
-                                  String apellido,
-                                  String nuevoTelefono) {
+        // Eliminar en el modelo
+        Contacto contactoAEliminar = new Contacto(nombre, apellido, "");
+        boolean eliminado = agenda.eliminarContacto(contactoAEliminar);
 
-        agenda.modificarTelefono(
-                nombre,
-                apellido,
-                nuevoTelefono
-        );
-    }
-
-    public boolean agendaLlena() {
-        return agenda.agendaLlena();
-    }
-
-    public void espaciosLibres() {
-        agenda.espaciosLibres();
+        // Actualizar la interfaz
+        if (eliminado) {
+            vista.mostrarMensajeExito("Contacto " + nombre + " " + apellido + " eliminado correctamente.");
+            vista.limpiarCampos();
+            vista.actualizarTabla(agenda.listarContactos());
+        } else {
+            vista.mostrarMensajeError("El contacto no existe en la agenda.");
+        }
     }
 }
