@@ -16,7 +16,7 @@ public class AgendaControlador {
                                String telefono) {
 
         Contacto contacto = new Contacto(nombre, apellido, telefono);
-        agenda.anadirContacto(contacto);
+        // agenda.anadirContacto(contacto);
     }
 
     public void listarContactos() {
