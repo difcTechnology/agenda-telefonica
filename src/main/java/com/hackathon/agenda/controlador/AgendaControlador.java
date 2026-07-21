@@ -28,6 +28,8 @@ public class AgendaControlador {
         String error = agenda.añadirContacto(contacto);
 
         if (error == null) {
+            String[] nuevoRegistro = new String[]{nombre, apellido, telefono};
+            vista.getModeloTabla().addRow(nuevoRegistro);
             vista.mostrarMensaje("Contacto agregado: " + nombre + " " + apellido);
         } else {
             vista.mostrarMensaje(error);
