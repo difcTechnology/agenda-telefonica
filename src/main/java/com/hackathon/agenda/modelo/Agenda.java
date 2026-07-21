@@ -87,12 +87,12 @@ public class Agenda {
     /**
      * Devuelve el teléfono del contacto localizado o null si no existe.
      */
-    public String buscarContacto(String nombre, String apellido) {
+    public Contacto buscarContacto(String nombre, String apellido) {
         if (nombre == null || apellido == null) return null;
         Contacto temp = new Contacto(nombre, apellido, "");
         for (Contacto c : contactos) {
             if (c.equals(temp)) {
-                return c.getTelefono();
+                return c;
             }
         }
         return null;

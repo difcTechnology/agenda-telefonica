@@ -24,12 +24,13 @@ public class AgendaControlador {
         vista.getBtnEliminar().addActionListener(e -> accionEliminar());
         vista.getBtnLimpiar().addActionListener(e -> vista.limpiarCampos());
         vista.getBtnListar().addActionListener(e -> listarContactos());
-        contactoSeleccionado = new Contacto();
+        vista.getBtnBuscar().addActionListener(e -> buscar());
         vista.getTablaContactos().getSelectionModel().addListSelectionListener(e->{
             if (!e.getValueIsAdjusting()) {
                 int filaSeleccionada = vista.getTablaContactos().getSelectedRow();
                 if (filaSeleccionada != -1) {
                     // Obtiene los datos de la fila seleccionada
+                    contactoSeleccionado = new Contacto();
                     contactoSeleccionado.setNombre(vista.getTablaContactos().getValueAt(filaSeleccionada, 0).toString());
                     contactoSeleccionado.setApellido(vista.getTablaContactos().getValueAt(filaSeleccionada, 1).toString());
                     contactoSeleccionado.setTelefono(vista.getTablaContactos().getValueAt(filaSeleccionada, 2).toString());
@@ -60,31 +61,23 @@ public class AgendaControlador {
 
     // Elimina el contacto seleccionado o ingresado
     private void accionEliminar() {
-        // Obtener texto de la vista
-        String nombre = vista.getTxtNombre().getText().trim();
-        String apellido = vista.getTxtApellido().getText().trim();
-
-        // Validar campos vacíos
-        if (nombre.isEmpty() || apellido.isEmpty()) {
-            vista.mostrarMensaje("Debe seleccionar un contacto o ingresar nombre y apellido para eliminar.",Color.YELLOW);
-            return;
-        }
-
-        // Eliminar en el modelo
-        Contacto contactoAEliminar = new Contacto(nombre, apellido, "");
-        boolean eliminado = agenda.eliminarContacto(contactoSeleccionado);
-        //Eliminarlo de la vista
-        int filaSeleccionada = vista.getTablaContactos().getSelectedRow();
-        if (filaSeleccionada != -1) {
-            vista.getModeloTabla().removeRow(filaSeleccionada);
-        }
-        // Actualizar la interfaz
-        if (eliminado) {
-            vista.mostrarMensaje("Contacto " + nombre + " " + apellido + " eliminado correctamente.",Color.GREEN);
-            vista.limpiarCampos();
-            //vista.actualizarTabla(agenda.listarContactos());
-        } else {
-            vista.mostrarMensaje("El contacto no existe en la agenda.",Color.YELLOW);
+        if(contactoSeleccionado != null) {
+            boolean eliminado = agenda.eliminarContacto(contactoSeleccionado);
+            //Eliminarlo de la vista
+            int filaSeleccionada = vista.getTablaContactos().getSelectedRow();
+            if (filaSeleccionada != -1) {
+                vista.getModeloTabla().removeRow(filaSeleccionada);
+            }
+            // Actualizar la interfaz
+            if (eliminado) {
+                vista.mostrarMensaje("Contacto " + contactoSeleccionado.getNombre() + " " + contactoSeleccionado.getApellido() + " eliminado correctamente.", Color.GREEN);
+                vista.limpiarCampos();
+                //vista.actualizarTabla(agenda.listarContactos());
+            } else {
+                vista.mostrarMensaje("El contacto no existe en la agenda.", Color.RED);
+            }
+        }else{
+            vista.mostrarMensaje("Debe seleccionar un registro", Color.RED);
         }
     }
 
@@ -99,6 +92,20 @@ public class AgendaControlador {
             String[] nuevoRegistro = new String[]{contacto.getNombre(), contacto.getApellido(), contacto.getTelefono()};
             vista.getModeloTabla().addRow(nuevoRegistro);
         }
+    }
+
+    public void buscar(){
+        vista.getModeloTabla().setRowCount(0);
+        String nombre = vista.getTxtNombre().getText().trim();
+        String apellido = vista.getTxtApellido().getText().trim();
+
+        Contacto contacto = agenda.buscarContacto(nombre,apellido);
+
+        if(contacto != null) {
+            String[] nuevoRegistro = new String[]{contacto.getNombre(), contacto.getApellido(), contacto.getTelefono()};
+            vista.getModeloTabla().addRow(nuevoRegistro);
+        }
+
     }
 
 }
