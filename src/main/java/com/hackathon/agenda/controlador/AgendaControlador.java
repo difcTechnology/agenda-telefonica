@@ -89,6 +89,19 @@ public class AgendaControlador {
     }
 
     private void accionModificar() {
+        String nombre = contactoSeleccionado.getNombre();
+        String apellido = contactoSeleccionado.getApellido();
+        String nuevoTelefono = vista.getTxtTelefono().getText().trim();
+
+        String error = agenda.modificarTelefono(nombre, apellido, nuevoTelefono);
+
+        if (error == null) {
+            listarContactos();
+            vista.limpiarCampos();
+            vista.mostrarMensaje("Teléfono actualizado: " + nombre + " " + apellido, Color.GREEN);
+        } else {
+            vista.mostrarMensaje(error, Color.RED);
+        }
     }
 
     public void listarContactos(){
