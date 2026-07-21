@@ -141,4 +141,9 @@ public class VentanaPrincipal extends JFrame {
     }
 
 
+    public void limpiarCampos() {
+        txtNombre.setText("");
+        txtApellido.setText("");
+        txtTelefono.setText("");
+    }
 }

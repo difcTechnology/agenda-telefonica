@@ -18,6 +18,7 @@ public class AgendaControlador {
         vista.getBtnAnadir().addActionListener(e -> accionAnadir());
         vista.getBtnModificar().addActionListener(e -> accionModificar());
         vista.getBtnEliminar().addActionListener(e -> accionEliminar());
+        vista.getBtnLimpiar().addActionListener(e -> vista.limpiarCampos());
     }
 
 
@@ -46,7 +47,7 @@ public class AgendaControlador {
 
         // Validar campos vacíos
         if (nombre.isEmpty() || apellido.isEmpty()) {
-            vista.mostrarMensajeError("Debe seleccionar un contacto o ingresar nombre y apellido para eliminar.");
+            vista.mostrarMensaje("Debe seleccionar un contacto o ingresar nombre y apellido para eliminar.");
             return;
         }
 
@@ -56,11 +57,15 @@ public class AgendaControlador {
 
         // Actualizar la interfaz
         if (eliminado) {
-            vista.mostrarMensajeExito("Contacto " + nombre + " " + apellido + " eliminado correctamente.");
+            vista.mostrarMensaje("Contacto " + nombre + " " + apellido + " eliminado correctamente.");
             vista.limpiarCampos();
-            vista.actualizarTabla(agenda.listarContactos());
+            //vista.actualizarTabla(agenda.listarContactos());
         } else {
-            vista.mostrarMensajeError("El contacto no existe en la agenda.");
+            vista.mostrarMensaje("El contacto no existe en la agenda.");
         }
     }
+
+    private void accionModificar() {
+    }
+
 }
