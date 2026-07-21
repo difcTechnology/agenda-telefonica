@@ -1,0 +1,22 @@
+# Archivos generados por IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Archivos de configuración propios de cada desarrollador
+*.launch
+
+# Directorios de compilación y caché de Gradle
+.gradle/
+build/
+bin/
+
+# Archivos locales de propiedades
+gradle.properties
+local.properties
+
+# Archivos temporales del sistema
+*.log
+.DS_Store
+Thumbs.db
